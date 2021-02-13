@@ -13,7 +13,7 @@ GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GA
 '''
 
 OPTIONS = webdriver.ChromeOptions()
-OPTIONS.add_argument("--headless")
+#OPTIONS.add_argument("--headless")
 OPTIONS.add_experimental_option('excludeSwitches', ['enable-logging'])
 
 #for raspi os, use following path: /usr/lib/chromium-browser/chromedriver
@@ -24,8 +24,6 @@ DUO_IFRAME = 'duo_iframe'
 
 #To do:
 #Detect OS to configure chromedriver path
-#Optimimize by running at selected times (For instance, 4:25 PM every day for 10 iterations)
-#update repo for usage details and comments
 
 def login(username, password):
 
@@ -214,8 +212,9 @@ def main():
             current_time = getCurrentTime()
             print(current_time)
             tm.sleep(30)
-        login(username, password)        
-        find_reservation(time,days_list)
+        for i in range(0,10):
+            login(username, password)        
+            find_reservation(time,days_list)
 
         current_time = getCurrentTime()
 
