@@ -159,7 +159,7 @@ def find_reservation(preferred_time, days_list):
 def purchase(register_button_xpath):
     DRIVER.find_element_by_xpath(register_button_xpath).click()
 
-    wait_time = 10  # seconds
+    wait_time = 10*3  # seconds
     try:
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.ID, 'rbtnYes')))
@@ -171,13 +171,24 @@ def purchase(register_button_xpath):
 
     add_to_cart_form_xpath = '/html/body/div[3]/div[1]/div[2]/form[2]'
     DRIVER.find_element_by_xpath(add_to_cart_form_xpath).submit()
-
+    
     try:
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.ID, 'checkoutButton')))
     except TimeoutException:
         print('Can\'t find checkout button.')
         return 1
+
+    cookies = True
+    try:
+        WebDriverWait(DRIVER, wait_time) \
+            .until(expected_conditions.presence_of_element_located((By.ID, 'gdpr-cookie-accept')))
+    except TimeoutException:
+        print('No cookies')
+        cookies = False
+
+    if cookies == True:
+        DRIVER.find_element_by_id('gdpr-cookie-accept').click()
 
     DRIVER.find_element_by_id('checkoutButton').click()
 
@@ -217,7 +228,7 @@ def main():
             current_time = getCurrentTime()
             print(current_time)
             tm.sleep(30)
-            
+
         current_time = getCurrentTime()
 
         # if login(username, password) == 0:
