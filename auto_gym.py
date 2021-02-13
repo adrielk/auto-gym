@@ -13,9 +13,10 @@ GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GA
 '''
 
 OPTIONS = webdriver.ChromeOptions()
-# OPTIONS.add_argument("--headless")
+OPTIONS.add_argument("--headless")
 OPTIONS.add_experimental_option('excludeSwitches', ['enable-logging'])
 
+#for raspi os, use following path: /usr/lib/chromium-browser/chromedriver
 DRIVER = webdriver.Chrome(executable_path='./chromedriver_win32/chromedriver', options=OPTIONS)
 PROGRAMS_PAGE_URL = 'https://www.go.recsports.virginia.edu/Program/GetProducts?classification=cc3e1e17-d2e4-4bdc-b66e-7c61999a91bf'
 NETBADGE_LOGIN_URL = 'https://shibidp.its.virginia.edu/idp/profile/SAML2/Redirect/SSO?execution=e1s1'
