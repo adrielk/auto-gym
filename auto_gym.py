@@ -1,5 +1,6 @@
-import os
 import sys
+from datetime import datetime
+import time as tm
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
@@ -12,22 +13,34 @@ GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GA
 '''
 
 OPTIONS = webdriver.ChromeOptions()
-OPTIONS.add_argument("--headless")
+# OPTIONS.add_argument("--headless")
 OPTIONS.add_experimental_option('excludeSwitches', ['enable-logging'])
-if os.name != 'posix':
-    DRIVER = webdriver.Chrome(executable_path='./chromedriver_win32/chromedriver', options=OPTIONS)
-else:
-    DRIVER = webdriver.Chrome(executable_path='./chromedriver', options=OPTIONS)
+
+DRIVER = webdriver.Chrome(executable_path='./chromedriver_win32/chromedriver', options=OPTIONS)
 PROGRAMS_PAGE_URL = 'https://www.go.recsports.virginia.edu/Program/GetProducts?classification=cc3e1e17-d2e4-4bdc-b66e-7c61999a91bf'
 NETBADGE_LOGIN_URL = 'https://shibidp.its.virginia.edu/idp/profile/SAML2/Redirect/SSO?execution=e1s1'
 DUO_IFRAME = 'duo_iframe'
 
+#To do:
+#Detect OS to configure chromedriver path
+#Optimimize by running at selected times (For instance, 4:25 PM every day for 10 iterations)
+#update repo for usage details and comments
 
 def login(username, password):
+
+    wait_time = 10
+
     DRIVER.get(PROGRAMS_PAGE_URL)
+    
+    try:
+        WebDriverWait(DRIVER, wait_time) \
+            .until(expected_conditions.presence_of_element_located((By.ID, 'loginLink')))
+    except TimeoutException:
+        print('User already logged in')
+        return 1
+
     DRIVER.find_element_by_id('loginLink').click()
 
-    wait_time = 10  # seconds
     try:
         netbadge_login_button_xpath = '/html/body/div[3]/div[4]/div/div/div/div[2]/div[2]/div[2]/div/button'
         WebDriverWait(DRIVER, wait_time) \
@@ -181,6 +194,8 @@ def purchase(register_button_xpath):
 
     return 0
 
+def getCurrentTime():
+    return datetime.now().strftime("%I:%M %p")
 
 def main():
     if len(sys.argv) != 5:
@@ -189,11 +204,25 @@ def main():
     username, password, time, days = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
     
     days_list = [day.strip() for day in days.split(',')]
+    desired_time = datetime.strptime(time, "%I:%M %p").strftime("%I:%M %p")
+    current_time = getCurrentTime()
+    
 
-    if login(username, password) == 0:
-        find_reservation(time, days_list)
-    else:
-        print('Login failed.')
+    while True:
+        while(current_time != desired_time):
+            current_time = getCurrentTime()
+            print(current_time)
+            tm.sleep(30)
+        login(username, password)        
+        find_reservation(time,days_list)
+
+        current_time = getCurrentTime()
+
+        # if login(username, password) == 0:
+        #     find_reservation(time, days_list)
+        # else:
+        #     print('Login failed.')
+        
 
 
 if __name__ == '__main__':
