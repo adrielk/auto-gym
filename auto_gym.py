@@ -208,14 +208,16 @@ def main():
     
 
     while True:
-        while(current_time != desired_time):
-            current_time = getCurrentTime()
-            print(current_time)
-            tm.sleep(30)
+
         for i in range(0,10):
             login(username, password)        
             find_reservation(time,days_list)
 
+        while(current_time != desired_time):
+            current_time = getCurrentTime()
+            print(current_time)
+            tm.sleep(30)
+            
         current_time = getCurrentTime()
 
         # if login(username, password) == 0:
