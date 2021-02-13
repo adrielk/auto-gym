@@ -1,0 +1,9 @@
+# compiled
+__pycache__/
+
+# macOS
+.DS_Store
+
+# Pycharm
+venv/
+.idea/
