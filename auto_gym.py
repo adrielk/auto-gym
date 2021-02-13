@@ -1,3 +1,4 @@
+import os
 import sys
 
 from selenium import webdriver
@@ -13,8 +14,10 @@ GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GA
 OPTIONS = webdriver.ChromeOptions()
 # OPTIONS.add_argument("--headless")
 OPTIONS.add_experimental_option('excludeSwitches', ['enable-logging'])
-
-DRIVER = webdriver.Chrome(executable_path='./chromedriver_win32/chromedriver', options=OPTIONS)
+if os.name != 'posix':
+    DRIVER = webdriver.Chrome(executable_path='./chromedriver_win32/chromedriver', options=OPTIONS)
+else:
+    DRIVER = webdriver.Chrome(executable_path='./chromedriver', options=OPTIONS)
 PROGRAMS_PAGE_URL = 'https://www.go.recsports.virginia.edu/Program/GetProducts?classification=cc3e1e17-d2e4-4bdc-b66e-7c61999a91bf'
 NETBADGE_LOGIN_URL = 'https://shibidp.its.virginia.edu/idp/profile/SAML2/Redirect/SSO?execution=e1s1'
 DUO_IFRAME = 'duo_iframe'
