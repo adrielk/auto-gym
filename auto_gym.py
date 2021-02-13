@@ -12,7 +12,7 @@ GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GAINS GA
 '''
 
 OPTIONS = webdriver.ChromeOptions()
-# OPTIONS.add_argument("--headless")
+OPTIONS.add_argument("--headless")
 OPTIONS.add_experimental_option('excludeSwitches', ['enable-logging'])
 if os.name != 'posix':
     DRIVER = webdriver.Chrome(executable_path='./chromedriver_win32/chromedriver', options=OPTIONS)
