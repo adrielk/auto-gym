@@ -157,9 +157,17 @@ def find_reservation(preferred_time, days_list):
 
 
 def purchase(register_button_xpath):
+    wait_time = 10*3  # seconds
+
+    try:
+        WebDriverWait(DRIVER, wait_time) \
+            .until(expected_conditions.presence_of_element_located((By.XPATH, register_button_xpath)))
+    except TimeoutException:
+        print('Can\'t find Yes button.')
+        return 1
+
     DRIVER.find_element_by_xpath(register_button_xpath).click()
 
-    wait_time = 10*3  # seconds
     try:
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.ID, 'rbtnYes')))
