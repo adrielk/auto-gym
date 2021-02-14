@@ -17,3 +17,8 @@ This program is called on the command line as follows:
 
 Note: 1 = Monday, 2 = Tuesday, etc.
 
+## Running with Linux screen:
+
+[Linux screen](https://www.howtoforge.com/linux_screen) enables you to run this script on a raspberry pi without having to keep the ssh session open. in other words, linux screen lets you close the command line interface without stopping the script. 
+
+
