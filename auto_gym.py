@@ -18,7 +18,7 @@ OPTIONS.add_experimental_option('excludeSwitches', ['enable-logging'])
 
 #for raspi os, use following path: /usr/lib/chromium-browser/chromedriver
 #for windows, use following path: ./chromedriver
-DRIVER = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriverr', options=OPTIONS)
+DRIVER = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver', options=OPTIONS)
 PROGRAMS_PAGE_URL = 'https://www.go.recsports.virginia.edu/Program/GetProducts?classification=cc3e1e17-d2e4-4bdc-b66e-7c61999a91bf'
 NETBADGE_LOGIN_URL = 'https://shibidp.its.virginia.edu/idp/profile/SAML2/Redirect/SSO?execution=e1s1'
 DUO_IFRAME = 'duo_iframe'
