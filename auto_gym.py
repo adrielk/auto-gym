@@ -17,10 +17,11 @@ OPTIONS = webdriver.ChromeOptions()
 OPTIONS.add_argument("--headless")
 OPTIONS.add_experimental_option('excludeSwitches', ['enable-logging'])
 
+print(f'System: {system()}')
+
 if system() == 'Linux':
     DRIVER = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver', options=OPTIONS)
 else:
-    print(system())
     DRIVER = webdriver.Chrome(executable_path='./chromedriver', options=OPTIONS)
 PROGRAMS_PAGE_URL = 'https://www.go.recsports.virginia.edu/Program/GetProducts?classification=cc3e1e17-d2e4-4bdc-b66e-7c61999a91bf'
 NETBADGE_LOGIN_URL = 'https://shibidp.its.virginia.edu/idp/profile/SAML2/Redirect/SSO?execution=e1s1'
@@ -108,7 +109,6 @@ def find_reservation(preferred_time, days_list):
 
     for day_path in days_button_paths:
         day_num = days_button_paths.index(day_path)+1
-        print(day_num, days_list)
         if str(day_num) in days_list:
             button = DRIVER.find_element_by_xpath(day_path)
             button_onclick = button.get_attribute("onclick")
@@ -231,7 +231,6 @@ def main():
                 for time_and_days in times_and_days_list:
                     time, days = time_and_days.split(' ')
                     desired_time = datetime.strptime(time, "%I:%M%p").strftime("%I:%M%p")
-                    print(time, days)
                     days = list(days.strip())
                     if login(username, password) != 0:
                         print('Unable to login.')
