@@ -14,17 +14,17 @@ First, make a new folder in this directory named `accounts` by entering
 
 `mkdir accounts`
 
-Create a text file (filename does not matter) in `accounts/` with your account information and desired reservation days and times. Days should be formatted as a string where `1` represents Monday. An example is shown below.
+Create a text file (filename does not matter) in `accounts/` with your account information and desired reservation days and start times. Days should be formatted as a string where `1` represents Monday. An example is shown below.
 
 ```
 <computing id>
 <password>
 12:00PM 135
 3:30PM 27
-5:0OPM 6
+5:00PM 6
 ```
 
-This tells the script to reserve times on Monday, Wednesday, and Friday at 12:00 PM, Tuesday and Sunday at 3:30 PM, and Friday at 5:00 PM.
+This tells the script to reserve start times on Monday, Wednesday, and Friday at 12:00 PM, Tuesday and Sunday at 3:30 PM, and Friday at 5:00 PM.
 
 To run the script, use the following command:
 

@@ -258,27 +258,6 @@ def main():
                     find_reservation(desired_time, days)
         except KeyboardInterrupt:
             print('Exited by user.')
-
-    # days_list = [day.strip() for day in days.split(',')]
-    # desired_time = datetime.strptime(time, "%I:%M %p").strftime("%I:%M %p")
-    # current_time = getCurrentTime()
-    #
-    # while True:
-    #     for i in range(0,10):
-    #         login(username, password)
-    #         find_reservation(time,days_list)
-    #
-    #     while(current_time != desired_time):
-    #         current_time = getCurrentTime()
-    #         print(current_time)
-    #         tm.sleep(30)
-    #
-    #     current_time = getCurrentTime()
-
-        # if login(username, password) == 0:
-        #     find_reservation(time, days_list)
-        # else:
-        #     print('Login failed.')
         
 
 if __name__ == '__main__':
