@@ -113,7 +113,6 @@ def find_reservation(preferred_time, days_list):
     for day_path in days_button_paths:
         day_num = days_button_paths.index(day_path) + 1
         if str(day_num) in days_list:
-            print(day_num)
             button = DRIVER.find_element_by_xpath(day_path)
             button_onclick = button.get_attribute("onclick")
             button_path = BASE_STRING + button_onclick[button_onclick.index("'") + 1:-1]
@@ -236,26 +235,36 @@ def main():
     else:
         print(f'Could not find file {argv[1]}')
         return 1
+
     with open(filename) as f:
         username = f.readline().strip()
         password = f.readline().strip()
         times_and_days_list = f.readlines()
         times_days_dict = {}
         for time_and_days in times_and_days_list:
-            desired_time, days = time_and_days.split(' ')
-            desired_time = datetime.strptime(desired_time, "%I:%M%p").strftime("%I:%M %p")
-            if desired_time.startswith('0'):
-                desired_time = desired_time[1:]
-            days = list(days.strip())
-            times_days_dict[desired_time] = days
+            if time_and_days:
+                desired_time, days = time_and_days.split(' ')
+                desired_time = datetime.strptime(desired_time, "%I:%M%p").strftime("%I:%M %p")
+                if desired_time.startswith('0'):
+                    desired_time = desired_time[1:]
+                days = list(days.strip())
+                times_days_dict[desired_time] = days
         try:
+            for _ in range(5):  # try 5 times
+                for time, days in times_days_dict.items():
+                    if login(username, password) != 0:
+                        print('Unable to login.')
+                    find_reservation(time, days)
+
             while 1:
                 if getCurrentTime() not in times_days_dict.keys():
                     sleep(30)
                 else:
-                    if login(username, password) != 0:
-                        print('Unable to login.')
-                    find_reservation(desired_time, days)
+                    for _ in range(5):  # try 5 times
+                        for time, days in times_days_dict.items():
+                            if login(username, password) != 0:
+                                print('Unable to login.')
+                            find_reservation(time, days)
         except KeyboardInterrupt:
             print('Exited by user.')
         
