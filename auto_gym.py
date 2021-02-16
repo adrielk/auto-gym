@@ -219,38 +219,45 @@ def purchase(register_button_xpath):
 
 
 def getCurrentTime():
-    return datetime.now().strftime("%I:%M%p")
+    time = datetime.now().strftime("%I:%M %p")
+    if time.startswith('0'):
+        time = time[1:]
+    return time
 
 
 def main():
     if len(argv) != 2:
         print('Please pass an account config filename.')
         return 1
-    try:
-        while 1:
-            if isfile(f'accounts/{argv[1]}'):
-                filename = f'accounts/{argv[1]}'
-            elif isfile(argv[1]):
-                filename = argv[1]
-            else:
-                print(f'Could not find file {argv[1]}')
-                return 1
-            with open(filename) as f:
-                username = f.readline().strip()
-                password = f.readline().strip()
-                times_and_days_list = f.readlines()
-                for time_and_days in times_and_days_list:
-                    time, days = time_and_days.split(' ')
-                    desired_time = datetime.strptime(time, "%I:%M%p").strftime("%I:%M %p")
-                    if desired_time.startswith('0'):
-                        desired_time = desired_time[1:]
-                    days = list(days.strip())
+    if isfile(f'accounts/{argv[1]}'):
+        filename = f'accounts/{argv[1]}'
+    elif isfile(argv[1]):
+        filename = argv[1]
+    else:
+        print(f'Could not find file {argv[1]}')
+        return 1
+    with open(filename) as f:
+        username = f.readline().strip()
+        password = f.readline().strip()
+        times_and_days_list = f.readlines()
+        times_days_dict = {}
+        for time_and_days in times_and_days_list:
+            desired_time, days = time_and_days.split(' ')
+            desired_time = datetime.strptime(desired_time, "%I:%M%p").strftime("%I:%M %p")
+            if desired_time.startswith('0'):
+                desired_time = desired_time[1:]
+            days = list(days.strip())
+            times_days_dict[desired_time] = days
+        try:
+            while 1:
+                if getCurrentTime() not in times_days_dict.keys():
+                    sleep(30)
+                else:
                     if login(username, password) != 0:
                         print('Unable to login.')
                     find_reservation(desired_time, days)
-            sleep(60)
-    except KeyboardInterrupt:
-        print('Exited by user.')
+        except KeyboardInterrupt:
+            print('Exited by user.')
 
     # days_list = [day.strip() for day in days.split(',')]
     # desired_time = datetime.strptime(time, "%I:%M %p").strftime("%I:%M %p")
