@@ -26,15 +26,13 @@ Create a text file (filename does not matter) in `accounts/` with your account i
 
 This tells the script to reserve times on Monday, Wednesday, and Friday at 12:00 PM, Tuesday and Sunday at 3:30 PM, and Friday at 5:00 PM.
 
-Multiple text files can be created for different accounts. All accounts in the `accounts/` directory will be run sequentially by the script.
-
 To run the script, use the following command:
 
-`python auto_gym.py`
+`python auto_gym.py <account.txt>`
 
 If you have multiple installations of Python installed on your machine, instead run:
 
-`python3 auto_gym.py`
+`python3 auto_gym.py <account.txt>`
 
 ## Running with Linux screen:
 

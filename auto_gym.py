@@ -1,7 +1,8 @@
 from datetime import datetime
 from time import sleep
 from platform import system
-from os import listdir
+from sys import argv
+from os.path import isfile
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
@@ -25,11 +26,11 @@ else:
     DRIVER = webdriver.Chrome(executable_path='./chromedriver', options=OPTIONS)
 PROGRAMS_PAGE_URL = 'https://www.go.recsports.virginia.edu/Program/GetProducts?classification=cc3e1e17-d2e4-4bdc-b66e-7c61999a91bf'
 NETBADGE_LOGIN_URL = 'https://shibidp.its.virginia.edu/idp/profile/SAML2/Redirect/SSO?execution=e1s1'
-DUO_IFRAME = 'duo_iframe'
+
+DAYS = ['None', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
 
 def login(username, password):
-
     wait_time = 10
 
     DRIVER.get(PROGRAMS_PAGE_URL)
@@ -38,7 +39,7 @@ def login(username, password):
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.ID, 'loginLink')))
     except TimeoutException:
-        print('User already logged in')
+        # User already logged in
         return 0
 
     DRIVER.find_element_by_id('loginLink').click()
@@ -77,6 +78,8 @@ def login(username, password):
     except TimeoutException:
         print('DUO login timed out.')
         return 1
+    else:
+        print('DUO Login approved')
 
     return 0
 
@@ -108,8 +111,9 @@ def find_reservation(preferred_time, days_list):
         print("Timeout")
 
     for day_path in days_button_paths:
-        day_num = days_button_paths.index(day_path)+1
+        day_num = days_button_paths.index(day_path) + 1
         if str(day_num) in days_list:
+            print(day_num)
             button = DRIVER.find_element_by_xpath(day_path)
             button_onclick = button.get_attribute("onclick")
             button_path = BASE_STRING + button_onclick[button_onclick.index("'") + 1:-1]
@@ -139,24 +143,25 @@ def find_reservation(preferred_time, days_list):
                             message_text = message_elem.text
                             time_elem = DRIVER.find_element_by_xpath(time_elem_path)
                             time_elem_text = time_elem.text[0:time_elem.text.index('-')].strip()
-
-                            if message_text != closed_text and time_elem_text == preferred_time:
-                                if purchase(register_elem_path) == 0:
-                                    print('Reservation success!')
-                                    break
+                            if time_elem_text == preferred_time:
+                                if message_text != closed_text:
+                                    if purchase(register_elem_path) == 0:
+                                        print('Reservation success!')
+                                        break
+                                    else:
+                                        print('Reservation failed.')
                                 else:
-                                    print('Reservation failed.')
+                                    print(f'No open slots for {DAYS[day_num]} at time {preferred_time}')
+                                    break
 
                         except TimeoutException:
-                            print("TIMEOUT ERROR")
+                            print('TIMEOUT ERROR')
 
                 except TimeoutException:
-                    print("No open slots")
+                    print(f'No open slots for {DAYS[day_num]} at time {preferred_time}')
 
             DRIVER.get(
                 'https://www.go.recsports.virginia.edu/Program/GetProducts?classification=cc3e1e17-d2e4-4bdc-b66e-7c61999a91bf')
-        else:
-            pass  # do not reserve this day
 
 
 def purchase(register_button_xpath):
@@ -166,7 +171,7 @@ def purchase(register_button_xpath):
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.XPATH, register_button_xpath)))
     except TimeoutException:
-        print('Can\'t find Yes button.')
+        print('Can\'t find register button. (You may have already registered).')
         return 1
 
     DRIVER.find_element_by_xpath(register_button_xpath).click()
@@ -218,24 +223,34 @@ def getCurrentTime():
 
 
 def main():
-    # if len(sys.argv) != 5:
-    #     print('Pass username, password, and time as command line arguments. Format time as: "4:30PM". Format days as 1,2,3,4,5,6,7 where Monday is 1 ')
-    #     return
-    # username, password, time, days = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
-    while 1:
-        for user in listdir('accounts'):
-            with open(f'accounts/{user}') as f:
+    if len(argv) != 2:
+        print('Please pass an account config filename.')
+        return 1
+    try:
+        while 1:
+            if isfile(f'accounts/{argv[1]}'):
+                filename = f'accounts/{argv[1]}'
+            elif isfile(argv[1]):
+                filename = argv[1]
+            else:
+                print(f'Could not find file {argv[1]}')
+                return 1
+            with open(filename) as f:
                 username = f.readline().strip()
                 password = f.readline().strip()
                 times_and_days_list = f.readlines()
                 for time_and_days in times_and_days_list:
                     time, days = time_and_days.split(' ')
-                    desired_time = datetime.strptime(time, "%I:%M%p").strftime("%I:%M%p")
+                    desired_time = datetime.strptime(time, "%I:%M%p").strftime("%I:%M %p")
+                    if desired_time.startswith('0'):
+                        desired_time = desired_time[1:]
                     days = list(days.strip())
                     if login(username, password) != 0:
                         print('Unable to login.')
                     find_reservation(desired_time, days)
-        sleep(60)
+            sleep(60)
+    except KeyboardInterrupt:
+        print('Exited by user.')
 
     # days_list = [day.strip() for day in days.split(',')]
     # desired_time = datetime.strptime(time, "%I:%M %p").strftime("%I:%M %p")
