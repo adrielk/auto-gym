@@ -150,14 +150,16 @@ def find_reservation(preferred_time, days_list):
                                     else:
                                         print('Reservation failed.')
                                 else:
-                                    print(f'No open slots for {DAYS[day_num]} at time {preferred_time}')
+                                    print(f'No open slots for {DAYS[day_num]} at time {preferred_time}.')
                                     break
 
                         except TimeoutException:
                             print('TIMEOUT ERROR')
 
                 except TimeoutException:
-                    print(f'No open slots for {DAYS[day_num]} at time {preferred_time}')
+                    print(f'No open slots for {DAYS[day_num]} at time {preferred_time}.')
+            else:
+                print(f'Slots not open yet for {DAYS[day_num]}.')
 
             DRIVER.get(
                 'https://www.go.recsports.virginia.edu/Program/GetProducts?classification=cc3e1e17-d2e4-4bdc-b66e-7c61999a91bf')
