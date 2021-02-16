@@ -79,7 +79,7 @@ def login(username, password):
         print('DUO login timed out.')
         return 1
     else:
-        print('DUO Login approved')
+        print('DUO Login approved.')
 
     return 0
 
