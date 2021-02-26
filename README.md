@@ -24,7 +24,7 @@ Create a text file (filename does not matter) in `accounts/` with your account i
 5:00PM 6
 ```
 
-This tells the script to reserve start times on Monday, Wednesday, and Friday at 12:00 PM, Tuesday and Sunday at 3:30 PM, and Friday at 5:00 PM.
+This example tells the script to reserve start times on Monday, Wednesday, and Friday at 12:00 PM, Tuesday and Sunday at 3:30 PM, and Saturday at 5:00 PM.
 
 To run the script, use the following command:
 
