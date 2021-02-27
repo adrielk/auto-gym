@@ -31,7 +31,7 @@ DAYS = ['None', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturda
 
 
 def login(username, password):
-    wait_time = 10
+    wait_time = 10  # seconds
 
     DRIVER.get(PROGRAMS_PAGE_URL)
     
@@ -53,6 +53,13 @@ def login(username, password):
         return 1
 
     DRIVER.execute_script("submitExternalLoginForm('Shibboleth')")
+
+    try:
+        WebDriverWait(DRIVER, wait_time) \
+            .until(expected_conditions.presence_of_element_located((By.ID, 'user')))
+    except TimeoutException:
+        print('Can\'t find username/password field.')
+        return 1
 
     DRIVER.find_element_by_id('user').send_keys(username)
     DRIVER.find_element_by_id('pass').send_keys(password)
