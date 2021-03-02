@@ -74,6 +74,13 @@ def login(username, password):
 
     DRIVER.switch_to.frame('duo_iframe')
 
+    try:
+        WebDriverWait(DRIVER, wait_time) \
+            .until(expected_conditions.presence_of_element_located((By.NAME, 'dampen_choice')))
+    except TimeoutException:
+        print('Can\'t find remember me checkbox.')
+        return 1
+
     DRIVER.find_element_by_name('dampen_choice').click()
     duo_login_button_xpath = '/html/body/div/div/div[1]/div/form/div[1]/fieldset/div[1]/button'
     DRIVER.find_element_by_xpath(duo_login_button_xpath).click()
