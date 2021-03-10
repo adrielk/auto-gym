@@ -18,8 +18,6 @@ OPTIONS = webdriver.ChromeOptions()
 OPTIONS.add_argument("--headless")
 OPTIONS.add_experimental_option('excludeSwitches', ['enable-logging'])
 
-print(f'System: {system()}')
-
 if system() == 'Linux':
     DRIVER = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver', options=OPTIONS)
 else:
@@ -270,7 +268,8 @@ def main():
                 for time, days in times_days_dict.items():
                     if login(username, password) != 0:
                         print('Unable to login.')
-                    find_reservation(time, days)
+                    else:
+                        find_reservation(time, days)
 
             while 1:
                 if getCurrentTime() not in times_days_dict.keys():
@@ -280,7 +279,8 @@ def main():
                         for time, days in times_days_dict.items():
                             if login(username, password) != 0:
                                 print('Unable to login.')
-                            find_reservation(time, days)
+                            else:
+                                find_reservation(time, days)
         except KeyboardInterrupt:
             print('Exited by user.')
         
