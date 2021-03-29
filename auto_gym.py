@@ -47,7 +47,7 @@ def login(username, password):
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.XPATH, netbadge_login_button_xpath)))
     except TimeoutException:
-        print('Can\'t find NetBadge login button.')
+        print(str(datetime.now()), 'Can\'t find NetBadge login button.')
         return 1
 
     DRIVER.execute_script("submitExternalLoginForm('Shibboleth')")
@@ -56,7 +56,7 @@ def login(username, password):
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.ID, 'user')))
     except TimeoutException:
-        print('Can\'t find username/password field.')
+        print(str(datetime.now()), 'Can\'t find username/password field.')
         return 1
 
     DRIVER.find_element_by_id('user').send_keys(username)
@@ -67,7 +67,7 @@ def login(username, password):
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.ID, 'duo_iframe')))
     except TimeoutException:
-        print('Can\'t find Duo iframe.')
+        print(str(datetime.now()), 'Can\'t find Duo iframe.')
         return 1
 
     DRIVER.switch_to.frame('duo_iframe')
@@ -76,7 +76,7 @@ def login(username, password):
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.NAME, 'dampen_choice')))
     except TimeoutException:
-        print('Can\'t find remember me checkbox.')
+        print(str(datetime.now()), 'Can\'t find remember me checkbox.')
         return 1
 
     DRIVER.find_element_by_name('dampen_choice').click()
@@ -85,13 +85,13 @@ def login(username, password):
 
     wait_time = 10 * 60  # minutes * 60 seconds/min
     try:
-        print('Waiting for DUO login.')
+        print(str(datetime.now()), 'Waiting for DUO login.')
         WebDriverWait(DRIVER, wait_time).until(lambda driver: driver.current_url == PROGRAMS_PAGE_URL)
     except TimeoutException:
-        print('DUO login timed out.')
+        print(str(datetime.now()), 'DUO login timed out.')
         return 1
     else:
-        print('DUO Login approved.')
+        print(str(datetime.now()), 'DUO Login approved.')
 
     return 0
 
@@ -120,7 +120,7 @@ def find_reservation(preferred_time, days_list):
     try:
         WebDriverWait(DRIVER, 5).until(expected_conditions.presence_of_element_located((By.ID, 'list-group')))
     except TimeoutException:
-        print("Timeout")
+        print(str(datetime.now()), "Timeout")
 
     for day_path in days_button_paths:
         day_num = days_button_paths.index(day_path) + 1
@@ -157,21 +157,21 @@ def find_reservation(preferred_time, days_list):
                             if time_elem_text == preferred_time:
                                 if message_text != closed_text:
                                     if purchase(register_elem_path) == 0:
-                                        print('Reservation success!')
+                                        print(str(datetime.now()), 'Reservation success!')
                                         break
                                     else:
-                                        print('Reservation failed.')
+                                        print(str(datetime.now()), 'Reservation failed.')
                                 else:
-                                    print(f'No open slots for {DAYS[day_num]} at time {preferred_time}.')
+                                    print(str(datetime.now()), f'No open slots for {DAYS[day_num]} at time {preferred_time}.')
                                     break
 
                         except TimeoutException:
-                            print('TIMEOUT ERROR')
+                            print(str(datetime.now()), 'TIMEOUT ERROR')
 
                 except TimeoutException:
-                    print(f'No open slots for {DAYS[day_num]} at time {preferred_time}.')
+                    print(str(datetime.now()), f'No open slots for {DAYS[day_num]} at time {preferred_time}.')
             else:
-                print(f'Slots not open yet for {DAYS[day_num]}.')
+                print(str(datetime.now()), f'Slots not open yet for {DAYS[day_num]}.')
 
             DRIVER.get(
                 'https://www.go.recsports.virginia.edu/Program/GetProducts?classification=cc3e1e17-d2e4-4bdc-b66e-7c61999a91bf')
@@ -184,7 +184,7 @@ def purchase(register_button_xpath):
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.XPATH, register_button_xpath)))
     except TimeoutException:
-        print('Can\'t find register button. (You may have already registered).')
+        print(str(datetime.now()), 'Can\'t find register button. (You may have already registered).')
         return 1
 
     DRIVER.find_element_by_xpath(register_button_xpath).click()
@@ -193,7 +193,7 @@ def purchase(register_button_xpath):
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.ID, 'rbtnYes')))
     except TimeoutException:
-        print('Can\'t find Yes button.')
+        print(str(datetime.now()), 'Can\'t find Yes button.')
         return 1
 
     DRIVER.find_element_by_id('rbtnYes').click()
@@ -205,14 +205,14 @@ def purchase(register_button_xpath):
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.ID, 'checkoutButton')))
     except TimeoutException:
-        print('Can\'t find checkout button.')
+        print(str(datetime.now()), 'Can\'t find checkout button.')
         return 1
 
     try:
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.ID, 'gdpr-cookie-accept')))
     except TimeoutException:
-        print('No cookies')
+        print(str(datetime.now()), 'No cookies')
     else:
         DRIVER.find_element_by_id('gdpr-cookie-accept').click()
 
@@ -223,7 +223,7 @@ def purchase(register_button_xpath):
         WebDriverWait(DRIVER, wait_time) \
             .until(expected_conditions.presence_of_element_located((By.XPATH, checkout_payment_button_xpath)))
     except TimeoutException:
-        print('Can\'t find checkout payment button.')
+        print(str(datetime.now()), 'Can\'t find checkout payment button.')
         return 1
 
     DRIVER.execute_script('Submit()')
@@ -240,14 +240,14 @@ def getCurrentTime():
 
 def main():
     if len(argv) != 2:
-        print('Please pass an account config filename.')
+        print(str(datetime.now()), 'Please pass an account config filename.')
         return 1
     if isfile(f'accounts/{argv[1]}'):
         filename = f'accounts/{argv[1]}'
     elif isfile(argv[1]):
         filename = argv[1]
     else:
-        print(f'Could not find file {argv[1]}')
+        print(str(datetime.now()), f'Could not find file {argv[1]}')
         return 1
 
     with open(filename) as f:
@@ -267,7 +267,7 @@ def main():
             for _ in range(5):  # try 5 times
                 for time, days in times_days_dict.items():
                     if login(username, password) != 0:
-                        print('Unable to login.')
+                        print(str(datetime.now()), 'Unable to login.')
                     else:
                         find_reservation(time, days)
 
@@ -278,11 +278,11 @@ def main():
                     for _ in range(5):  # try 5 times
                         for time, days in times_days_dict.items():
                             if login(username, password) != 0:
-                                print('Unable to login.')
+                                print(str(datetime.now()), 'Unable to login.')
                             else:
                                 find_reservation(time, days)
         except KeyboardInterrupt:
-            print('Exited by user.')
+            print(str(datetime.now()), 'Exited by user.')
         
 
 if __name__ == '__main__':
