@@ -1,4 +1,4 @@
-# auto-gym
+# auto-gym 🏋️
 
 Auto-Gym is an automated gym reservation scheduling program that uses the [Selenium Webdriver](https://selenium-python.readthedocs.io/installation.html) for the [AFC weight room](https://www.go.recsports.virginia.edu/Program/GetProducts?classification=cc3e1e17-d2e4-4bdc-b66e-7c61999a91bf) at the University of Virginia. Since the start of the COVID school year, there is a strict capacity limit on how many people can be in the AFC weight room at once. Spots fill up quickly and it can be easy to forget when to schedule a time. This program can be run once and take care of weight room reservations for you by automatically detecting when spots open up and reserving your spot!
 
